@@ -1,0 +1,610 @@
+<!doctype html>
+<meta charset=utf-8>
+<!-- 恭喜你发现了另一条解谜的道路：代码阅读！加油，找出潜藏在代码里的另外3个彩蛋吧！-->
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="howler.core.min.js"></script>
+    <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+    <style>
+      .el-button--C,.el-button--C:focus,.el-button--C.is-active, .el-button--C:active{background: #FED5AB; border-color: #FC8003; color: #000000;}
+      .el-button--D,.el-button--D:focus,.el-button--D.is-active, .el-button--D:active{background: #D5FEAB; border-color: #80FC03; color: #000000;}
+      .el-button--E,.el-button--E:focus,.el-button--E.is-active, .el-button--E:active{background: #ABFED5; border-color: #03FC80; color: #000000;}
+      .el-button--F,.el-button--F:focus,.el-button--F.is-active, .el-button--F:active{background: #ABFEFE; border-color: #03FCFC; color: #000000;}
+      .el-button--G,.el-button--G:focus,.el-button--G.is-active, .el-button--G:active{background: #ABABFE; border-color: #0303FC; color: #000000;}
+      .el-button--A,.el-button--A:focus,.el-button--A.is-active, .el-button--A:active{background: #FEABFE; border-color: #FC03FC; color: #000000;}
+      .el-button--B,.el-button--B:focus,.el-button--B.is-active, .el-button--B:active{background: #FEABAB; border-color: #FC0303; color: #000000;}
+      .el-button--C:hover{background: #FDBF82; border-color: #FDBF82; color: #FFFFFF;}
+      .el-button--D:hover{background: #BFFD82; border-color: #BFFD82; color: #FFFFFF;}
+      .el-button--E:hover{background: #82FDBF; border-color: #82FDBF; color: #FFFFFF;}
+      .el-button--F:hover{background: #82FDFD; border-color: #82FDFD; color: #FFFFFF;}
+      .el-button--G:hover{background: #8282FD; border-color: #8282FD; color: #FFFFFF;}
+      .el-button--A:hover{background: #FD82FD; border-color: #FD82FD; color: #FFFFFF;}
+      .el-button--B:hover{background: #FD8282; border-color: #FD8282; color: #FFFFFF;}
+      #app{background-color: #FEFFCF;}
+      #panel{padding-top: 2%; padding-left: 4%;}
+      #wheel{width: 100%; padding-bottom: 100%; height: 0; position: relative;}
+      .semi-circle-right{width: 100%; height: 100%; right: 0; position: absolute; border-top-left-radius: 0% 0%; border-top-right-radius: 100% 50%; border-bottom-right-radius: 100% 50%; border-bottom-left-radius: 0% 0%; transform-origin: 0% 50%;}
+      .semi-circle-left{width: 100%; height: 100%; left: 0; position: absolute; border-top-right-radius: 0% 0%; border-top-left-radius: 100% 50%; border-bottom-left-radius: 100% 50%; border-bottom-right-radius: 0% 0%; transform-origin: 100% 50%;}
+      #left-semi-circle{width: 40%; height: 80%; left: 10%; top: 10%; overflow: hidden;}
+      #right-semi-circle{width: 40%; height: 80%; right: 10%; bottom: 10%; overflow: hidden;}
+      #slice1{background-color: #C0C0C0;}
+      #slice2{background-color: #D0D0D0; transform: rotate(45deg);}
+      #slice3{background-color: #C0C0C0; transform: rotate(90deg);}
+      #slice4{background-color: #D0D0D0; transform: rotate(135deg);}
+      #slice5{background-color: #C0C0C0; transform: rotate(0deg);}
+      #slice6{background-color: #D0D0D0; transform: rotate(45deg);}
+      #slice7{background-color: #C0C0C0; transform: rotate(90deg);}
+      #slice8{background-color: #D0D0D0; transform: rotate(135deg);}
+      #help{width: 80%; left: 10%; top: 20%; z-index: 9999; position: absolute; display: block;}
+      #helpclose{font-size: 48px; font-weight: bold; background: #808080;}
+      #helpvideo{width: 100%;}
+    </style>
+  </head>
+<body>
+<div id="app">
+  <div id="title">
+  </div>
+  <div id="main">
+    <div id="panel">
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <div id="paneltitle">
+             <el-row>
+               <el-col :span="12">
+                 <el-date-picker
+                   v-model="currentYear"
+                   readonly
+                   type="year"
+                   style="width:200%;">
+                 </el-date-picker>
+               </el-col>
+               <el-col :span="12">
+                  <el-input v-model="currentSeason" readonly></el-input>
+               </el-col>
+             </el-row>
+             <el-row>
+                <el-col :span="10">
+                   <el-button type="text" size="mini" @click="openHelp">新手教程</el-button>
+                </el-col>
+                <el-col :span="14">
+                  <el-checkbox v-model="playSong">播放歌曲片段</el-checkbox>
+                </el-col>
+             </el-row>
+             <el-row>
+               <el-input type="textarea" v-model="msg[semester-1]" readonly autosize="{minRows: 4, maxRows: 4}" resize="none"></el-input>
+             </el-row>
+          </div>
+        </el-col>
+        <el-col :span="16">
+          <div id="panelchoices">
+            <el-row>
+              <el-col :span="12">那时候，你骑在车上哼唱...</el-col>
+              <el-col :span="12"><el-button v-bind:class="choicesNote(4)" id="choice5" onclick="vm.choose(5)">{{songtitle[semester-1][choices[4]-1]}}</el-button></el-col>
+            </el-row>
+            <div style="height:20px;"></div>
+            <el-row>
+              <el-col :span="12"><el-button v-bind:class="choicesNote(0)" id="choice1" onclick="vm.choose(1)">{{songtitle[semester-1][choices[0]-1]}}</el-button></el-col>
+              <el-col :span="12"><el-button v-bind:class="choicesNote(1)" id="choice2" onclick="vm.choose(2)">{{songtitle[semester-1][choices[1]-1]}}</el-button></el-col>
+            </el-row>
+            <div style="height:20px;"></div>
+            <el-row>
+              <el-col :span="12"><el-button v-bind:class="choicesNote(2)" id="choice3" onclick="vm.choose(3)">{{songtitle[semester-1][choices[2]-1]}}</el-button></el-col>
+              <el-col :span="12"><el-button v-bind:class="choicesNote(3)" id="choice4" onclick="vm.choose(4)">{{songtitle[semester-1][choices[3]-1]}}</el-button></el-col>
+            </el-row>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    <div style="height:20px;"></div>
+    <div id="wheelbar">
+      <el-row>
+        <div id="wheelbartitle">
+           <p id="wheeltext">这是专属于你的唱片。用色彩谱写你的主打歌吧！</p>
+           <span id="hint"><el-input v-model="hintIn" size="mini" style="float: left; width: 20%;"></el-input><el-input v-model="hintOut" size="mini" readonly style="float: left; width: 80%;"></el-input></span>
+        </div>
+      </el-row>
+      <el-row>
+      <div id="wheel">
+         <div id="right-semi-circle" class="semi-circle-right">
+           <div id="slice1" class="semi-circle-right"></div>
+           <div id="slice2" class="semi-circle-right"></div>
+           <div id="slice3" class="semi-circle-right"></div>
+           <div id="slice4" class="semi-circle-right"></div>
+         </div>
+         <div id="left-semi-circle" class="semi-circle-left">
+           <div id="slice5" class="semi-circle-left"></div>
+           <div id="slice6" class="semi-circle-left"></div>
+           <div id="slice7" class="semi-circle-left"></div>
+           <div id="slice8" class="semi-circle-left"></div>
+         </div>
+      </div>
+      </el-row>
+      <el-row>
+      <div id="wheelbarscore">
+      </div>
+      </el-row>
+    </div>
+  </div>
+  <div id="help">
+    <span id="helpclose" onclick="document.getElementsByTagName(&#039;video&#039;)[0].pause();document.getElementById(&#039;help&#039;).style.display=&#039;none&#039;">&times;</span>
+    <video id="helpvideo" src="help.mp4" controls="controls"></video>
+  </div>
+</div>
+</body>
+<!-- import Vue before Element -->
+  <script src="https://lib.baomitu.com/vue/2.6.14/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+          visible: false,
+          semester: 1,
+          msg: [
+            "新生活如歌般绚烂。跟着第一感觉走！",
+            "清华画卷徐徐展开。你写下更多第一次",
+            "天安门前，我们是民族复兴的一部分",
+            "疫情让一切滑坡，我们抱团战胜空虚和瘟疫",
+            "却跑不赢时间。进度滑坡，项目如何交付？",
+            "保研、出国或工作，都到了冲刺的时候",
+            "卸下课业压力，原来清华的阳光这么暖",
+            "彩蛋的提示说两遍，其他仅一遍"
+          ],
+          songtitle: [
+             [
+               "分列式进行曲",
+               "(拉练的)雨一直下",
+               "追光者",
+               "晴天(轰趴爆款)",
+               "团结就是力量",
+               "学猫叫",
+               "强军战歌"
+             ],
+             [
+               "海草",
+               "可惜不是你",
+               "Good time",
+               "来自天堂的魔鬼",
+               "失恋阵线联盟",
+               "卡路里",
+               "起风了"
+             ],
+             [
+               "世间美好与你环环相扣",
+               "处处吻",
+               "爱河",
+               "钢铁洪流进行曲",
+               "我爱你中国",
+               "芒种",
+               "说好不哭"
+             ],
+             [
+               "等风雨经过",
+               "喜欢你",
+               "夏天的风",
+               "Astronomia",
+               "Mojito",
+               "Melody青你2",
+               "想见你想见你想见你"
+             ],
+             [
+               "飞鸟和蝉",
+               "如果当时2020",
+               "时间都去哪儿了",
+               "我和我的祖国",
+               "少年",
+               "无价之姐",
+               "错位时空"
+             ],
+             [
+               "你最最最重要",
+               "Pre-star",
+               "How you like that",
+               "触摸天空",
+               "蜜雪冰城主题曲",
+               "YES!OK!",
+               "两只老虎爱跳舞"
+             ],
+             [
+               "Ngana Rindu",
+               "孤勇者",
+               "给我一首歌的时间",
+               "热爱105℃的你",
+               "赤伶",
+               "Ring ring ring",
+               "漠河舞厅"
+             ],
+             [
+               "入海",
+               "这世界那么多人",
+               "北京东路的日子",
+               "雪花",
+               "干杯",
+               "记念",
+               "凤凰花开的路口"
+             ],
+          ],
+          choices: [1,1,1,1,1],
+          wheelRotation: 0,
+          graduated: false,
+          playSong: true,
+          history: [0,0,0,0,0,0,0,0],
+          hintIn: "在此输入",
+          sound_note: [undefined, undefined, undefined, undefined, undefined,
+                                undefined, undefined, undefined, undefined, undefined,
+                                undefined, undefined, undefined, undefined, undefined,
+                                undefined, undefined, undefined, undefined, undefined,
+                                undefined, undefined, undefined]
+      },
+      computed: {
+        currentYear: {get: function(){return (Math.floor((this.semester)/2)+2018).toString()}},
+        currentSeason: {get: function(){return (this.semester%2==1)?"秋":"春"}},
+        hintOut: {get: function(){
+                         if (this.hintIn=="第一") {return "你听到的第一种色彩决定了按钮的颜色。谜底的第一步是橙色";}
+                         else if (this.hintIn=="滑坡") {return "骑自行车溜下坡真的很爽。在音乐中也一样，色彩渐变令人舒适";}
+                         else if (this.hintIn=="清华") {return "你熟悉校歌的第一句吗？谜底的最后是黄绿色和深蓝色";}
+                         else {return "以获取提示。如果输入是彩蛋的提示（两字），提示就会显示在这里";}
+                      }}
+      },
+      methods: {
+        generateChoices: function(){
+          for (var i=0; i<5; i++){
+            while(true){
+              this.choices[i] = 1 + Math.floor(Math.random()*7);
+              var ok = true;
+              for (var j=0; j<i; j++){
+                if(this.choices[j] == this.choices[i]){
+                  ok = false;
+                  break;
+                }
+              }
+              if(ok) {break;}
+            }
+          }
+          console.log(this.choices);
+          this.$forceUpdate();
+        },
+        choicesNote: function(id){
+            var x = this.choices[id];
+            if(x==1)return "el-button--C"; 
+            if(x==2)return "el-button--D"; 
+            if(x==3)return "el-button--E"; 
+            if(x==4)return "el-button--F"; 
+            if(x==5)return "el-button--G"; 
+            if(x==6)return "el-button--A"; 
+            if(x==7)return "el-button--B"; 
+        },
+        onGraduate: function(){
+            this.graduated = true;
+            var seriesNumber = 0;
+            for (var i=0; i<8; i++){
+              seriesNumber = seriesNumber * 7 + this.history[i]-1;
+            }
+            seriesNumber += 1;
+            document.getElementById("wheeltext").innerHTML="离开校园的你再度播放起这张唱片，点点滴滴在你脑海中放映。你仿佛回到了那个热闹的网球场，那个梦开始的地方……<button onclick=\"window.location.reload();\">再次进入回忆</button>" + "<br></br>你的独家唱片编号为：" + seriesNumber.toString() + "<br></br>【首次提交此页面截图，积分+20；累计提交5张不同的此页面截图，积分+10】";
+            if (md5(seriesNumber.toString()) == "aa3b2b26b446344bcf4e69d621bcdff5"){
+              document.getElementById("wheeltext").innerHTML+="<br></br>不愧是资深清华人，你笔下的旋律与《清华大学校歌》珠联璧合！【解锁彩蛋1，积分+30】"
+              var sound_thu = new Howl({
+               src: ['audio/THU.mp3'],
+               html5: true
+              });
+              sound_thu.play();
+            } else if (md5(seriesNumber.toString()) == "69778da8066d71180631e3f17142f34c"){
+              document.getElementById("wheeltext").innerHTML+="<br></br>你笔下的旋律与《清华大学校歌》珠联璧合！没想到吧，开端就是结局^o^ 【解锁彩蛋2，积分+15】"
+              var sound_thu = new Howl({
+               src: ['audio/THU.mp3'],
+               html5: true
+              });
+              sound_thu.play();
+            } else if ((seriesNumber % 100000) % 11111 == 0) {
+               document.getElementById("wheeltext").innerHTML+="<br></br>你的欧气非同寻常，序列号后5位相同！【解锁彩蛋3，积分+10】"
+            } else {
+               var historyCount = [0,0,0,0,0,0,0];
+               for (var i=0; i<8; i++){
+                  historyCount[this.history[i]-1]++;
+               }
+               var distribution = "";
+               for (var i=8; i>=0; i--){
+                  for (var j=0; j<7; j++){
+                     if (historyCount[j]==i){
+                        distribution += i.toString();
+                     }
+                  }
+               }
+               var encodeUTF8 = function(str){
+                   var bytes = new Array();
+                   var k = 0;
+                   for (var i=0; i<str.length; i++){
+                      var j = encodeURI(str[i]);
+                      if (j.length == 1){
+                         bytes[k++] = j.charCodeAt(0);
+                      } else {
+                         var b = j.split("%");
+                         for (var l=1; l<b.length; l++){
+                            bytes[k++] = parseInt("0x"+b[l]);
+                         }
+                      }
+                   }
+                   console.log(bytes);
+                   return bytes;
+               }
+               function decodeUTF8 (arr) {
+                   let str = arr.reduce((prev, cur) => prev +=`%${cur.toString(16)}`, '');
+
+                   return decodeURIComponent(str);
+                }
+               var symmetryDecrypt = function(bytes, cypher){
+                   
+                   for (var i=0; i<bytes.length; i++){
+                      var cy = cypher.substring((i*2)%32, (i*2+2)%32);
+                      cy = parseInt("0x" + cy);
+                      bytes[i] ^= cy;
+                   }
+                   console.log(bytes);
+                   return decodeUTF8(bytes);
+               }
+                if (md5(distribution+distribution+distribution)=="0731e80b8052b24b69ca4c6ce9a68dc0"){
+                   document.getElementById("wheeltext").innerHTML+="<br></br>"+symmetryDecrypt([
+    53,
+    33,
+    111,
+    128,
+    182,
+    73,
+    156,
+    125,
+    205,
+    142,
+    57,
+    85,
+    11,
+    64,
+    140,
+    229,
+    106,
+    24,
+    42,
+    218,
+    176,
+    48,
+    221,
+    86,
+    130,
+    218,
+    59,
+    7,
+    117,
+    94,
+    255,
+    184,
+    105,
+    68,
+    127,
+    197,
+    199,
+    79,
+    252,
+    37,
+    249,
+    215,
+    80,
+    107,
+    105,
+    23,
+    142,
+    191,
+    54,
+    30,
+    85,
+    128,
+    158,
+    93,
+    157,
+    67,
+    226,
+    131,
+    39,
+    97,
+    6,
+    79,
+    157,
+    228,
+    105,
+    26,
+    33,
+    229,
+    162
+],md5(distribution))+"【解锁彩蛋4，积分+15】";
+                }
+            }
+            var rotateFunction = this.rotateWheel;
+            var recursiveRotate = function(){
+                rotateFunction();
+            	setTimeout(recursiveRotate, 188);
+            }
+            recursiveRotate();
+            this.playChords();
+        },
+        onSongEnd: function(){
+           for (var i=1; i<=5; i++){
+             document.getElementById('choice' + i.toString()).disabled = false;
+           }
+           if (this.semester == 8){
+                  this.onGraduate();
+                } else {
+                  this.semester += 1;
+                  this.generateChoices();
+                }
+        },
+        choose: function(id){
+          if (this.graduated) {
+            return;
+          }
+          this.colorSlice(id);
+          this.history[this.semester-1] = this.choices[id-1];
+          var songName = (Math.floor((this.semester)/2)+18).toString() + ((this.semester%2==1)?'A':'S') + '-' + this.choices[id-1].toString();
+          if (this.playSong){
+            var sound_song = new Howl({
+               src: ['audio/' + songName + '.mp3'],
+               html5: true,
+               onend: this.onSongEnd
+            });
+            for (var i=1; i<=5; i++){
+              document.getElementById('choice' + i.toString()).disabled = true;
+            }
+            sound_song.play();
+            } else {
+               this.onSongEnd();
+            }
+        },
+        playChords: function(){
+           var h = [
+              [0,4,5,6,3,2,0],
+              [0,0,2,2,6,2,4],
+              [2,2,0,5,2,5,2],
+              [4,2,2,0,6,2,4],
+              [6,0,4,1,0,5,4],
+              [2,4,5,2,2,0,2],
+              [6,1,3,0,2,4,0]
+           ];
+           var chords = [0,0,0,0,0,0,0,0];
+           var bestChords = [0,0,0,0,0,0,0,0];
+           var bestScore = 0;
+           var history = this.history;
+           console.log(history);
+           var optimizeChords = function(d, s){
+               if(d==8){
+                 if(s>bestScore){
+                   bestScore = s;
+                   for (var i=0; i<8; i++){
+                      bestChords[i] = chords[i];
+                   }
+                 }
+                 return;
+               }
+               var chord3 = history[d]-1;
+               var chord6 = (chord3+5)%7;
+               if(d==0 || h[chords[d-1]-1][chord3]>0){
+                 chords[d] = chord3+1;
+                 optimizeChords(d+1, s+(d==0?((chord3+1==1)?5:0):h[chords[d-1]-1][chord3]));
+               }
+               if(d==0 || h[chords[d-1]-1][chord6]>0){
+                 chords[d] = chord6+1;
+                 optimizeChords(d+1, s+(d==0?((chord6+1==1)?5:0):h[chords[d-1]-1][chord6]));
+               }
+           }
+           optimizeChords(0, 0);
+           console.log(bestScore);
+           console.log(bestChords);
+           var notes = [0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0];
+           var roots = [64,54,56,57,59,61,63];
+           var threes = [68,57,59,61,63,64,66];
+           var fives = [71,61,63,64,66,68,69];
+           var sixes = [73,63,64,66,68,69,71];
+           for (var i=0; i<8; i++){
+             var L = this.history[i]-1;
+
+             if (i-1>=0 && bestChords[i-1]==1 && bestChords[i]==5){
+               notes[i*8]=63;
+               notes[i*8+1]=71;
+               notes[i*8+2]=66;
+               notes[i*8+3]=71;
+               notes[i*8+4]=63;
+               notes[i*8+5]=71;
+               notes[i*8+6]=66;
+               notes[i*8+7]=71;
+             }
+             else if (i-1>=0 && bestChords[i-1]==4 && bestChords[i]==1){
+               notes[i*8]=56;
+               notes[i*8+1]=64;
+               notes[i*8+2]=59;
+               notes[i*8+3]=64;
+               notes[i*8+4]=56;
+               notes[i*8+5]=64;
+               notes[i*8+6]=59;
+               notes[i*8+7]=64;
+             } else if (bestChords[i] == this.history[i]){ //chord3
+               notes[i*8]=roots[L];
+               notes[i*8+1]=fives[L];
+               notes[i*8+2]=threes[L];
+               notes[i*8+3]=fives[L];
+               notes[i*8+4]=roots[L];
+               notes[i*8+5]=fives[L];
+               notes[i*8+6]=threes[L];
+               notes[i*8+7]=fives[L];
+             } else {
+               notes[i*8]=roots[L];
+               notes[i*8+1]=sixes[L];
+               notes[i*8+2]=threes[L];
+               notes[i*8+3]=sixes[L];
+               notes[i*8+4]=roots[L];
+               notes[i*8+5]=sixes[L];
+               notes[i*8+6]=threes[L];
+               notes[i*8+7]=sixes[L];
+             }
+             if (i+1<8 && bestChords[i]==5 && bestChords[i+1]==4){
+               notes[i*8+4]=59;
+               notes[i*8+5]=62;
+               notes[i*8+6]=64;
+               notes[i*8+7]=68;
+             }
+             if (i+1<8 && bestChords[i]==7 && bestChords[i+1]==2){
+               notes[i*8+4]=61;
+               notes[i*8+5]=63;
+               notes[i*8+6]=66;
+               notes[i*8+7]=69;
+             }
+           } 
+           console.log(notes);
+           var soundNote = this.sound_note;
+           var progress = -1;
+           var playNotes = function(){
+              progress = (progress + 1) % 64;
+              soundNote[notes[progress]-64+11].play();
+              setTimeout(function(){playNotes();},188);
+           }
+           setTimeout(playNotes, 600);
+        },
+        rotateWheel: function(){
+           this.wheelRotation -= 45.0/8
+           document.getElementById("right-semi-circle").style = "transform: rotate(" + (this.wheelRotation).toString() + "deg);"
+           document.getElementById("left-semi-circle").style = "transform: rotate(" + (this.wheelRotation).toString() + "deg);"
+        },
+        colorSlice: function(choice){
+          var x = this.choices[choice-1];
+          var id = "slice" + this.semester.toString();
+          var color = "";
+          if (x==1) {color = "#FDBF82";}
+          if (x==2) {color = "#BFFD82";}
+          if (x==3) {color = "#82FDBF";}
+          if (x==4) {color = "#82FDFD";}
+          if (x==5) {color = "#8282FD";}
+          if (x==6) {color = "#FD82FD";}
+          if (x==7) {color = "#FD8282";}
+          document.getElementById(id).style="background-color: " + color;
+        },
+        openHelp: function(){
+           document.getElementById("help").style.display="block";
+        }
+      },
+      mounted: function(){
+        this.generateChoices();
+        for (var i=-11; i<=11; i++){
+          this.sound_note[i+11] = new Howl({
+                 src: ['audio/pf-'+(64+i).toString()+'.mp3',
+                        'audio/pf-'+(64+i).toString()+'.ogg']
+              });
+        }
+      }
+    })
+  </script>
+</html>
